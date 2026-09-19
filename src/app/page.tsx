@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState } from "react";
 import dynamic from "next/dynamic";
@@ -21,7 +21,10 @@ export default function Home() {
 
   return (
     <main className="relative h-screen w-screen overflow-hidden bg-[#030508]">
-      <SceneCanvas onModuleSelect={setActiveModule} />
+      <SceneCanvas
+        onModuleSelect={setActiveModule}
+        activeModule={activeModule}
+      />
 
       <SystemHUD activeModule={activeModule} />
     </main>

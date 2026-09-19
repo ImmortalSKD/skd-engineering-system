@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { Canvas as R3FCanvas } from "@react-three/fiber";
 import { ACESFilmicToneMapping } from "three";
@@ -6,10 +6,12 @@ import Experience from "./Experience";
 
 type SceneCanvasProps = {
   onModuleSelect: (module: string) => void;
+  activeModule: string | null;
 };
 
 export default function SceneCanvas({
   onModuleSelect,
+  activeModule,
 }: SceneCanvasProps) {
   return (
     <R3FCanvas
@@ -27,7 +29,10 @@ export default function SceneCanvas({
         far: 500,
       }}
     >
-      <Experience onModuleSelect={onModuleSelect} />
+      <Experience
+        onModuleSelect={onModuleSelect}
+        activeModule={activeModule}
+      />
     </R3FCanvas>
   );
 }

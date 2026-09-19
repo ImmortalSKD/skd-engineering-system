@@ -9,6 +9,7 @@ type InteractiveModuleProps = {
   subtitle: string;
   color?: string;
   onClick?: () => void;
+  active?: boolean;
 };
 
 export default function InteractiveModule({
@@ -17,12 +18,16 @@ export default function InteractiveModule({
   subtitle,
   color = "#4ca8c5",
   onClick,
+  active = false,
 }: InteractiveModuleProps) {
   const [hovered, setHovered] = useState(false);
+
+  const highlighted = hovered || active;
 
   return (
     <group
       position={position}
+      scale={active ? 1.06 : 1}
       onClick={(event) => {
         event.stopPropagation();
         onClick?.();
@@ -37,27 +42,47 @@ export default function InteractiveModule({
         document.body.style.cursor = "default";
       }}
     >
+      {/* Main module */}
       <mesh castShadow>
         <boxGeometry args={[2.4, 1.6, 0.8]} />
+
         <meshStandardMaterial
-          color={hovered ? color : "#101820"}
+          color={highlighted ? color : "#101820"}
           metalness={0.9}
           roughness={0.25}
           emissive={color}
-          emissiveIntensity={hovered ? 0.8 : 0.12}
+          emissiveIntensity={
+            active ? 0.65 : hovered ? 0.8 : 0.12
+          }
         />
       </mesh>
 
+      {/* Front display */}
       <mesh position={[0, 0, 0.42]}>
         <boxGeometry args={[1.8, 0.8, 0.04]} />
+
         <meshStandardMaterial
           color="#020509"
           emissive={color}
-          emissiveIntensity={hovered ? 1.8 : 0.4}
+          emissiveIntensity={
+            active ? 1.5 : hovered ? 1.8 : 0.4
+          }
         />
       </mesh>
 
-      {hovered && (
+      {/* Active status light */}
+      {active && (
+        <mesh position={[0, -0.52, 0.45]}>
+          <boxGeometry args={[0.9, 0.025, 0.025]} />
+
+          <meshBasicMaterial
+            color={color}
+          />
+        </mesh>
+      )}
+
+      {/* Hover / active information */}
+      {(hovered || active) && (
         <Html
           position={[0, 1.4, 0]}
           center
@@ -67,22 +92,23 @@ export default function InteractiveModule({
             style={{
               width: 220,
               padding: "12px 14px",
-              background: "rgba(2,5,9,0.92)",
+              background: "rgba(2,5,9,0.94)",
               border: `1px solid ${color}`,
               color: "#fff",
               fontFamily: "monospace",
               pointerEvents: "none",
-              boxShadow: `0 0 25px ${color}55`,
+              boxShadow: `0 0 30px ${color}55`,
+              transition: "all 0.2s ease",
             }}
           >
             <div
               style={{
-                fontSize: 11,
+                fontSize: 10,
                 letterSpacing: "0.25em",
                 color,
               }}
             >
-              SYSTEM MODULE
+              {active ? "ACTIVE MODULE" : "SYSTEM MODULE"}
             </div>
 
             <div
