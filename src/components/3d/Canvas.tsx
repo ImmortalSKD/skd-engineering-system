@@ -4,7 +4,13 @@ import { Canvas as R3FCanvas } from "@react-three/fiber";
 import { ACESFilmicToneMapping } from "three";
 import Experience from "./Experience";
 
-export default function SceneCanvas() {
+type SceneCanvasProps = {
+  onModuleSelect: (module: string) => void;
+};
+
+export default function SceneCanvas({
+  onModuleSelect,
+}: SceneCanvasProps) {
   return (
     <R3FCanvas
       shadows
@@ -21,7 +27,7 @@ export default function SceneCanvas() {
         far: 500,
       }}
     >
-      <Experience />
+      <Experience onModuleSelect={onModuleSelect} />
     </R3FCanvas>
   );
 }

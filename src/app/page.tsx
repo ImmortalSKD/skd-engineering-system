@@ -1,13 +1,15 @@
 "use client";
 
+import { useState } from "react";
 import dynamic from "next/dynamic";
+import SystemHUD from "@/components/SystemHUD";
 
 const SceneCanvas = dynamic(
   () => import("@/components/3d/Canvas"),
   {
     ssr: false,
     loading: () => (
-      <div className="flex h-screen items-center justify-center bg-[#030508] font-mono text-sm tracking-[0.3em] text-white">
+      <div className="flex h-screen items-center justify-center bg-[#030508] font-mono text-sm tracking-[0.3em] text-cyan-300">
         INITIALIZING SYSTEM-01...
       </div>
     ),
@@ -15,17 +17,13 @@ const SceneCanvas = dynamic(
 );
 
 export default function Home() {
+  const [activeModule, setActiveModule] = useState<string | null>(null);
+
   return (
     <main className="relative h-screen w-screen overflow-hidden bg-[#030508]">
-      <SceneCanvas />
+      <SceneCanvas onModuleSelect={setActiveModule} />
 
-      <div className="pointer-events-none absolute left-6 top-6 z-10 font-mono text-xs tracking-[0.3em] text-white/60">
-        SYSTEM-01 // ENGINEERING FACILITY
-      </div>
-
-      <div className="pointer-events-none absolute bottom-6 left-6 z-10 font-mono text-[10px] tracking-[0.2em] text-white/40">
-        SAYAN KUMAR DAKUA // ECE // R&amp;D SYSTEM
-      </div>
+      <SystemHUD activeModule={activeModule} />
     </main>
   );
 }
