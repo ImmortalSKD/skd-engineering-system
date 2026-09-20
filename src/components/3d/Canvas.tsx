@@ -2,6 +2,7 @@
 
 import { Canvas as R3FCanvas } from "@react-three/fiber";
 import { ACESFilmicToneMapping } from "three";
+
 import Experience from "./Experience";
 
 type SceneCanvasProps = {

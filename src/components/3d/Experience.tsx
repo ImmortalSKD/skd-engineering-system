@@ -1,12 +1,12 @@
-"use client";
-
-import { useFrame } from "@react-three/fiber";
-import { OrbitControls, Text } from "@react-three/drei";
+﻿"use client";
+import SystemAtmosphere from "./SystemAtmosphere";
+import { OrbitControls } from "@react-three/drei";
 import { useRef } from "react";
-import * as THREE from "three";
 
 import InteractiveModule from "./InteractiveModule";
 import CameraController from "./CameraController";
+import ModuleLight from "./ModuleLight";
+import SystemCore from "./SystemCore";
 
 type ExperienceProps = {
   onModuleSelect: (module: string) => void;
@@ -21,9 +21,16 @@ export default function Experience({
 
   return (
     <>
-      {/* ========================================================= */}
-      {/* LIGHTING                                                  */}
-      {/* ========================================================= */}
+      {/* ENVIRONMENT */}
+
+      <color attach="background" args={["#030508"]} />
+
+      <fog
+        attach="fog"
+        args={["#030508", 20, 55]}
+      />
+
+      {/* LIGHTING */}
 
       <ambientLight intensity={0.35} />
 
@@ -42,18 +49,8 @@ export default function Experience({
         color="#4ca8c5"
       />
 
-      {/* ========================================================= */}
-      {/* ENVIRONMENT / FLOOR                                       */}
-      {/* ========================================================= */}
+      {/* FLOOR */}
 
-      <color attach="background" args={["#030508"]} />
-
-      <fog
-        attach="fog"
-        args={["#030508", 20, 55]}
-      />
-
-      {/* Main floor */}
       <mesh
         rotation={[-Math.PI / 2, 0, 0]}
         position={[0, -1, 0]}
@@ -68,56 +65,59 @@ export default function Experience({
         />
       </mesh>
 
-      {/* ========================================================= */}
-      {/* GRID                                                       */}
-      {/* ========================================================= */}
+      {/* ENGINEERING GRID */}
 
       <gridHelper
         args={[40, 40, "#1b3a46", "#0b171d"]}
         position={[0, -0.98, 0]}
       />
 
-      {/* ========================================================= */}
-      {/* CENTRAL SYSTEM CORE                                       */}
-      {/* ========================================================= */}
+     {/* SYSTEM-01 CENTRAL CORE */}
 
-      <group position={[0, 0, 0]}>
-        <mesh castShadow>
-          <boxGeometry args={[3.2, 2.2, 1.4]} />
+<SystemCore />
 
-          <meshStandardMaterial
-            color="#101820"
-            metalness={0.9}
-            roughness={0.22}
-            emissive="#163542"
-            emissiveIntensity={0.3}
-          />
-        </mesh>
+{/* HOLOGRAPHIC ATMOSPHERE */}
 
-        <mesh position={[0, 0, 0.73]}>
-          <boxGeometry args={[2.4, 1.2, 0.05]} />
+<SystemAtmosphere />
+      {/* MODULE LIGHTING */}
 
-          <meshStandardMaterial
-            color="#020509"
-            emissive="#4ca8c5"
-            emissiveIntensity={1.2}
-          />
-        </mesh>
+      <ModuleLight
+        position={[-8, 1.5, -4.2]}
+        color="#4ca8c5"
+        active={activeModule === "EMBEDDED"}
+      />
 
-        <Text
-          position={[0, 0, 0.79]}
-          fontSize={0.24}
-          color="#6de5ff"
-          anchorX="center"
-          anchorY="middle"
-        >
-          SYSTEM-01
-        </Text>
-      </group>
+      <ModuleLight
+        position={[-4, 1.5, -4.2]}
+        color="#38a8a8"
+        active={activeModule === "PCB LAB"}
+      />
 
-      {/* ========================================================= */}
-      {/* ENGINEERING MODULES                                      */}
-      {/* ========================================================= */}
+      <ModuleLight
+        position={[4, 1.5, -4.2]}
+        color="#315bff"
+        active={activeModule === "ROBOTICS"}
+      />
+
+      <ModuleLight
+        position={[8, 1.5, -4.2]}
+        color="#7b61ff"
+        active={activeModule === "UAV"}
+      />
+
+      <ModuleLight
+        position={[-7, 1.5, 4.8]}
+        color="#42d392"
+        active={activeModule === "AI / ML"}
+      />
+
+      <ModuleLight
+        position={[7, 1.5, 4.8]}
+        color="#ff9f43"
+        active={activeModule === "R&D"}
+      />
+
+      {/* ENGINEERING MODULES */}
 
       <InteractiveModule
         position={[-8, 0, -5]}
@@ -173,18 +173,14 @@ export default function Experience({
         onClick={() => onModuleSelect("R&D")}
       />
 
-      {/* ========================================================= */}
-      {/* CAMERA                                                     */}
-      {/* ========================================================= */}
+      {/* CAMERA CONTROLLER */}
 
       <CameraController
         activeModule={activeModule ?? null}
         controlsRef={controlsRef}
       />
 
-      {/* ========================================================= */}
-      {/* ORBIT CONTROLS                                            */}
-      {/* ========================================================= */}
+      {/* ORBIT CONTROLS */}
 
       <OrbitControls
         ref={controlsRef}
@@ -198,4 +194,3 @@ export default function Experience({
     </>
   );
 }
-
